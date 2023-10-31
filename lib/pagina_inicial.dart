@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:dodi/pagina_config.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class Inicial extends StatefulWidget {
   @override
@@ -17,18 +16,6 @@ class Inicial extends StatefulWidget {
 }
 
 class _InicialState extends State<Inicial> {
-  bool adm = false;
-  FirebaseAuth _auth = FirebaseAuth.instance;
-
-  @override
-  void initState() {
-    super.initState();
-    String? email = _auth.currentUser?.email;
-    if (email == "fbuligonantunes@gmail.com") {
-      adm = true;
-    }
-  }
-
   int _selectedIndex = 0;
   PageController _pageController = PageController(initialPage: 0);
   Widget _buildPage(Widget child) {
@@ -53,110 +40,54 @@ class _InicialState extends State<Inicial> {
           title: const Text("DODI"),
         ),
       ),
-      body: adm
-          ? PageView(
-              controller: _pageController,
-              children: [
-                _buildPage(feed()),
-                _buildPage(ideia()),
-                _buildPage(chat()),
-                _buildPage(perfil()),
-                _buildPage(usuarios()),
-              ],
-              onPageChanged: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
-            )
-          : PageView(
-              controller: _pageController,
-              children: [
-                _buildPage(feed()),
-                _buildPage(ideia()),
-                _buildPage(chat()),
-                _buildPage(perfil()),
-              ],
-              onPageChanged: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
-            ),
-      bottomNavigationBar: adm
-          ? BottomNavigationBar(
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  backgroundColor: Color(0xFF5A7A7A),
-                  label: '',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.add_outlined),
-                  backgroundColor: Color(0xFF5A7A7A),
-                  label: '',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.messenger_outline),
-                  backgroundColor: Color(0xFF5A7A7A),
-                  label: '',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  backgroundColor: Color(0xFF5A7A7A),
-                  label: '',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.supervised_user_circle),
-                  backgroundColor: Color(0xFF5A7A7A),
-                  label: '',
-                ),
-              ],
-              currentIndex: _selectedIndex,
-              selectedItemColor: Colors.white,
-              unselectedItemColor: Colors.white.withOpacity(0.3),
-              onTap: (index) {
-                _pageController.animateToPage(
-                  index,
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.easeInOut,
-                );
-              },
-            )
-          : BottomNavigationBar(
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  backgroundColor: Color(0xFF5A7A7A),
-                  label: '',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.add_outlined),
-                  backgroundColor: Color(0xFF5A7A7A),
-                  label: '',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.messenger_outline),
-                  backgroundColor: Color(0xFF5A7A7A),
-                  label: '',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  backgroundColor: Color(0xFF5A7A7A),
-                  label: '',
-                ),
-              ],
-              currentIndex: _selectedIndex,
-              selectedItemColor: Colors.white,
-              unselectedItemColor: Colors.white.withOpacity(0.3),
-              onTap: (index) {
-                _pageController.animateToPage(
-                  index,
-                  duration: const Duration(milliseconds: 500),
-                  curve: Curves.easeInOut,
-                );
-              },
-            ),
+      body: PageView(
+        controller: _pageController,
+        children: [
+          _buildPage(feed()),
+          _buildPage(ideia()),
+          _buildPage(chat()),
+          _buildPage(perfil()),
+        ],
+        onPageChanged: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            backgroundColor: Color(0xFF5A7A7A),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add_outlined),
+            backgroundColor: Color(0xFF5A7A7A),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.messenger_outline),
+            backgroundColor: Color(0xFF5A7A7A),
+            label: '',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            backgroundColor: Color(0xFF5A7A7A),
+            label: '',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white.withOpacity(0.3),
+        onTap: (index) {
+          _pageController.animateToPage(
+            index,
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+          );
+        },
+      ),
     );
   }
 }
@@ -963,191 +894,6 @@ class _perfilState extends State<perfil> {
     }
   }
 
-  void excluir(String titulo) async {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Confirma a exclusão da ideia?'),
-          content: const Text('Após apagar, não é possível recuperar.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancelar'),
-            ),
-            TextButton(
-              onPressed: () async {
-                String e = await _bd.excluir(titulo);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(e),
-                    duration: const Duration(seconds: 2),
-                  ),
-                );
-                Navigator.of(context).pop();
-              },
-              child: const Text('Confirmar'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class usuarios extends StatefulWidget {
-  @override
-  State<usuarios> createState() => _usuariosState();
-}
-
-class _usuariosState extends State<usuarios> {
-  @override
-  User? user = FirebaseAuth.instance.currentUser;
-  late ImageProvider imagem;
-  final bancodeDados _bd = bancodeDados();
-  void initState() {
-    super.initState();
-    _imagemPerfil();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: SingleChildScrollView(
-            child: StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('usuario').snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                var usuarios = snapshot.data!.docs;
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: usuarios.length,
-                  itemBuilder: (context, index) {
-                    var dado = usuarios[index].data();
-                    var nome = dado['nome'];
-                    Padding(
-                        padding: EdgeInsets.all(15),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: const Color(0xfffff5eb),
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          child: Column(
-                            children: [
-                              CircleAvatar(
-                                radius: 40,
-                                backgroundImage: imagem,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: const Color(0xFF5A7A7A),
-                                      width: 4.0,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  IconButton(
-                                    alignment: FractionalOffset.centerRight,
-                                    onPressed: () {
-                                      excluir(nome);
-                                    },
-                                    icon: const Icon(
-                                      Icons.restore_from_trash,
-                                      color: Color(0xffaa080e),
-                                      size: 30,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              Text(
-                                nome,
-                                style: const TextStyle(fontSize: 24),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.only(left: 14),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      "Tema: $nome",
-                                      style: const TextStyle(fontSize: 18),
-                                      maxLines: 10,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Padding(
-                                    padding: EdgeInsets.only(left: 14),
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      "Resumo: $nome",
-                                      style: const TextStyle(fontSize: 18),
-                                      maxLines: 10,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                  },
-                );
-              },
-            ),
-          )
-
-    );
-  }
-
-  Future<void> _imagemPerfil() async {
-    FirebaseAuth _auth = FirebaseAuth.instance;
-    String? email = _auth.currentUser?.email;
-    String? url = await _bd.pegarFoto(email!);
-    print("URL da imagem: $url");
-
-    if (url != null && url.isNotEmpty) {
-      setState(() {
-        imagem = NetworkImage(url);
-      });
-    } else {
-      setState(() {
-        imagem = const AssetImage('assets/images/ico.png');
-      });
-    }
-  }
   void excluir(String titulo) async {
     showDialog(
       context: context,

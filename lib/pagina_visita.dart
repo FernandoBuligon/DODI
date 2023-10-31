@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,7 +6,6 @@ import 'package:dodi/pagina_projeto.dart';
 import 'package:dodi/banco_de_dados.dart';
 
 class visita extends StatefulWidget {
-
   final String nome;
   final String email;
 
@@ -17,20 +17,26 @@ class visita extends StatefulWidget {
   @override
   State<visita> createState() => _visitaState();
 }
+
 class _visitaState extends State<visita> {
   late ImageProvider imagem;
 
   final bancodeDados _bd = bancodeDados();
+  bool adm = false;
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
+  @override
   void initState() {
     super.initState();
     _imagemPerfil(widget.email);
+    String? email = _auth.currentUser?.email;
+    if (email == "fbuligonantunes@gmail.com") {
+      adm = true;
+    }
   }
 
   Future<void> _imagemPerfil(String email) async {
-    print('cheguei aqui caralho');
     String? url = await _bd.pegarFoto(email);
-    print("URL da imagem: $url");
 
     if (url != null && url.isNotEmpty) {
       setState(() {
@@ -65,18 +71,36 @@ class _visitaState extends State<visita> {
       body: Column(
         children: [
           const SizedBox(height: 45),
-          CircleAvatar(
-            radius: 85,
-            backgroundImage: imagem,
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: const Color(0xFF5A7A7A),
-                  width: 4.0,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 85,
+                backgroundImage: imagem,
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: const Color(0xFF5A7A7A),
+                      width: 4.0,
+                    ),
+                  ),
                 ),
               ),
-            ),
+              adm
+                  ? IconButton(
+                      alignment: FractionalOffset.centerRight,
+                      onPressed: () {
+                        null;
+                      },
+                      icon: const Icon(
+                        Icons.restore_from_trash,
+                        color: Color(0xffaa080e),
+                        size: 30,
+                      ),
+                    )
+                  : const Text(""),
+            ],
           ),
           const SizedBox(height: 45),
           const Text(
