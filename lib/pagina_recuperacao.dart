@@ -96,8 +96,6 @@ class _recuperacaoState extends State<recuperacao> {
       );
     } else {
       print(email);
-      Future<bool> usado = _auth.conferirEmail(email);
-      if (await usado) {
         _auth.resetarSenha(email);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -105,14 +103,6 @@ class _recuperacaoState extends State<recuperacao> {
             duration: Duration(seconds: 2),
           ),
         );
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('O e-mail inserido não está em uso'),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
     }
   }
 }

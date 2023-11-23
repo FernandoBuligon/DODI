@@ -20,7 +20,7 @@ class _ConfigPerfilState extends State<ConfigPerfil> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final bancodeDados _bd = bancodeDados();
   TextEditingController _nomeController = TextEditingController();
-  late ImageProvider image;
+  late ImageProvider image = const AssetImage('assets/images/ico.png');
   void initState() {
     super.initState();
     _imagemPerfil();

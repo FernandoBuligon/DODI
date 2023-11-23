@@ -19,7 +19,7 @@ class visita extends StatefulWidget {
 }
 
 class _visitaState extends State<visita> {
-  late ImageProvider imagem;
+  late ImageProvider imagem = const AssetImage('assets/images/ico.png');
 
   final bancodeDados _bd = bancodeDados();
   bool adm = false;

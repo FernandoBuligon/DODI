@@ -668,8 +668,9 @@ class perfil extends StatefulWidget {
 class _perfilState extends State<perfil> {
   @override
   User? user = FirebaseAuth.instance.currentUser;
-  late ImageProvider imagem;
+  late ImageProvider imagem = const AssetImage('assets/images/ico.png');
   final bancodeDados _bd = bancodeDados();
+
   void initState() {
     super.initState();
     _imagemPerfil();

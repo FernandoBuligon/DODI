@@ -23,7 +23,7 @@ class projeto extends StatefulWidget {
 }
 
 class _projetoState extends State<projeto> {
-  late ImageProvider imagem;
+  late ImageProvider imagem = const AssetImage('assets/images/ico.png');
 
   final bancodeDados _bd = bancodeDados();
 
