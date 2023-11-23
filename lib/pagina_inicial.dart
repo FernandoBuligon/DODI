@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:dodi/pagina_config.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-
+//
 class Inicial extends StatefulWidget {
   @override
   _InicialState createState() => _InicialState();

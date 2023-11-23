@@ -6,7 +6,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:dodi/firebase_options.dart';
 import 'banco_de_dados.dart';
 import 'package:dodi/pagina_recuperacao.dart';
-
+//
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
