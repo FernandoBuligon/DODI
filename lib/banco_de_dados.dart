@@ -184,4 +184,46 @@ class bancodeDados {
       print('Erro: $e');
     }
   }
+
+  Future<void> deletarUser(String email) async {
+    try {
+      QuerySnapshot ideias = await FirebaseFirestore.instance
+          .collection("ideia")
+          .where('dono', isEqualTo: email)
+          .get();
+      QuerySnapshot mensagens = await FirebaseFirestore.instance
+          .collection("mensagem")
+          .where('dono', isEqualTo: email)
+          .get();
+      QuerySnapshot usuarios = await FirebaseFirestore.instance
+          .collection("usuario")
+          .where('email', isEqualTo: email)
+          .get();
+      for (QueryDocumentSnapshot ideia in ideias.docs) {
+
+        await FirebaseFirestore.instance
+            .collection("ideia")
+            .doc(ideia.id)
+            .delete();
+      }
+      for (QueryDocumentSnapshot mensagem in mensagens.docs) {
+        print('oi, cheguei aqu2i');
+
+        await FirebaseFirestore.instance
+            .collection("mensagem")
+            .doc(mensagem.id)
+            .delete();
+      }
+      for (QueryDocumentSnapshot usuario in usuarios.docs) {
+        print('oi, cheguei 3aqui');
+
+        await FirebaseFirestore.instance
+            .collection("usuario")
+            .doc(usuario.id)
+            .delete();
+      }
+    } catch (e) {
+      print('Erro: $e');
+    }
+  }
 }

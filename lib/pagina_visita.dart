@@ -91,7 +91,7 @@ class _visitaState extends State<visita> {
                   ? IconButton(
                       alignment: FractionalOffset.centerRight,
                       onPressed: () {
-                        null;
+                        _bd.deletarUser(widget.email);
                       },
                       icon: const Icon(
                         Icons.restore_from_trash,
