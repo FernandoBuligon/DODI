@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -139,24 +138,6 @@ class bancodeDados {
 
   Future resetarSenha(String email) async {
     await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-  }
-
-  Future<bool> conferirEmail(String email) async {
-    try {
-      print('email: $email');
-      final List<String> usado =
-          await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
-      print(usado);
-      if (usado.isEmpty) {
-        print('object');
-        return false;
-      } else {
-        return true;
-      }
-    } on FirebaseAuthException catch (e) {
-      print("bag: $e");
-      return false;
-    }
   }
 
   Future<void> atualizarDados( String fotoPerfilUrl, String nome, String novoNome ) async {
